@@ -129,16 +129,16 @@
 			<td><input onchange="topla1()" data-type='adet'  name="adet[]"  type="text" value="<?=$sip['miktar'][$i];?>"></td>
 			<td><input onchange="topla1()" data-type='fiyat' name="fiyat[]" type="text" value="<?=$sip['b_fiyat'][$i];?>"></td>
 			<td><input onchange="topla1()" data-type='iskon' name="iskon[]" type="text" value="<?=$sip['iskonto'][$i];?>"></td>
-			<td><input                     data-type='tutar' name="tutar[]" type="text" value=""></td>
+			<td><input readonly            data-type='tutar' name="tutar[]" type="text" value=""></td>
 		</tr>
 	<? } ?>
 		<tr>
 			<td><?=($i);?></td>
 			<td><input type="date"></td>
-			<td><input onchange="topla1()" data-type='adet'  name="adet[]" type="text" value="0"></td>
-			<td><input onchange="topla1()" data-type='fiyat' name="fiyat[]" type="text" value="0"></td>
-			<td><input onchange="topla1()" data-type='iskon' name="iskon[]" type="text" value="0"></td>
-			<td><input                     data-type='tutar' name="tutar[]" type="text" value="0"></td>
+			<td><input onchange="topla1()" data-type='adet'  name="adet[]"  type="text" value="0" ></td>
+			<td><input onchange="topla1()" data-type='fiyat' name="fiyat[]" type="text" value="0" ></td>
+			<td><input onchange="topla1()" data-type='iskon' name="iskon[]" type="text" value="0" ></td>
+			<td><input readonly            data-type='tutar' name="tutar[]" type="text" value="0"></td>
 		</tr>
 	</tbody>	
 
@@ -160,10 +160,23 @@
 		var fiyatAll = document.querySelectorAll("[data-type='fiyat']");
 		var iskonAll = document.querySelectorAll("[data-type='iskon']");
 		var tutarAll = document.querySelectorAll("[data-type='tutar']");
+		adetAll.forEach(function(input) {
+		  input.addEventListener("keydown", sadeceRakam);
+		});
+
+		fiyatAll.forEach(function(input) {
+		  input.addEventListener("keydown", sadeceRakam);
+		});
+
+		iskonAll.forEach(function(input) {
+		  input.addEventListener("keydown", sadeceRakam);
+		});
+				
 		for (let i = 0; i < <?=($tt+1);?>; i++) {
 			genTop += (strToFlo(adetAll[i].value) * strToFlo(fiyatAll[i].value) - strToFlo(iskonAll[i].value));
 			tutarAll[i].value = paraFormat((strToFlo(adetAll[i].value) * strToFlo(fiyatAll[i].value)) - strToFlo(iskonAll[i].value));
             adetAll[i].value  = paraFormat(strToFlo(adetAll[i].value));
+            iskonAll[i].value = paraFormat(strToFlo(iskonAll[i].value));
             fiyatAll[i].value = paraFormat(strToFlo(fiyatAll[i].value));
 		}	
 		GenelToplam.innerHTML = paraFormat(genTop);
@@ -177,6 +190,14 @@
 	  let temizlenmisString = sayiString.replace(/\./g, '').replace(',', '.');
 	  let floatSayi = parseFloat(temizlenmisString);
 	  return floatSayi;
+	}
+
+
+	function sadeceRakam(event) {
+	  let keyCode = event.keyCode || event.which;
+	  if ((isNaN(event.key) && event.key !== "Backspace" && event.key !== "Delete" && event.key !== "Tab" && event.key !== "," ) || keyCode == 32) {
+	    event.preventDefault();
+	  }
 	}
 
 
